@@ -3,6 +3,10 @@ pipeline {
     environment {
         //be sure to replace "bhavukm" with your own Docker Hub username
         DOCKER_IMAGE_NAME = "nidhisarup8953/train-schedule"
+
+        // Set PATH to include directory where we'll install kubectl
+        PATH = "${env.HOME}/bin:${env.PATH}"
+
     }
     stages {
          stage('Checkout') {
@@ -66,15 +70,24 @@ pipeline {
         }
         stage('Setup kubectl') {
             steps {
-                sh '''
-                    curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
-                    chmod +x kubectl
-                    mkdir -p ${HOME}/bin
-                    mv kubectl ${HOME}/bin/
-                    export PATH=${HOME}/bin:${PATH}
-                '''
-                // Verify installation
-                sh 'kubectl version --client --short'
+                script {
+                    // Create bin directory if it doesn't exist
+                    sh 'mkdir -p ${HOME}/bin'
+                    
+                    // Download and install kubectl
+                    sh '''
+                        curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
+                        chmod +x kubectl
+                        mv kubectl ${HOME}/bin/
+                    '''
+                    
+                    // Verify installation
+                    sh '''
+                        ${HOME}/bin/kubectl version --client --short
+                        which kubectl
+                    '''
+                }
+            }
             }
         }
         stage('Deploy') {
