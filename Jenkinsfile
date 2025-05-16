@@ -9,7 +9,8 @@ pipeline {
             steps {
                 echo 'Running build automation'
                 echo "Displayed*******************************************"
-                sh './gradlew --version'
+                sh 'chmod +x gradlew'
+                echo "Displayed***************uu****************************"
                 sh 'java -version'
                 echo "Displayed*******************************************"
                 sh './gradlew build --no-daemon'
