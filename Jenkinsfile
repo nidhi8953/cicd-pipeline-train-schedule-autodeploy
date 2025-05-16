@@ -75,13 +75,12 @@ pipeline {
         }
         stage('Deploy') {
             steps {               
-                 withCredentials([string(credentialsId: 'kubeconfig_id', variable: 'KUBECONFIG_CONTENT']) {
-                    sh '''
-                        echo "$KUBECONFIG_CONTENT" > kubeconfig.yaml
-                        export KUBECONFIG=kubeconfig.yaml
-                        kubectl apply -f train-schedule-kube-canary.yaml
-                        rm kubeconfig.yaml
-                    '''
+                withCredentials([file(credentialsId: 'kubeconfig_id', variable: 'KUBECONFIG_FILE']) {
+                        sh '''
+                            export KUBECONFIG=${KUBECONFIG_FILE}
+                            kubectl apply -f deployment.yaml -n your-namespace
+                            kubectl rollout status deployment/your-deployment -n your-namespace
+                        '''
                 }
             }
         }
