@@ -5,8 +5,10 @@ plugins {
 
 node {
 	download = true
-	version = "9.11.1"
-	npmVersion = "5.6.0"
+	version = "20.13.1"
+	npmVersion = "10.7.0"
+	workDir = file("${project.buildDir}/nodejs")
+        npmWorkDir = file("${project.buildDir}/npm")
 }
 
 //declare a build task
