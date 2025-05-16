@@ -83,8 +83,8 @@ pipeline {
                     
                     // Verify installation
                     sh '''
-                        ${HOME}/bin/kubectl version --client --short
-                        which kubectl
+                        ${HOME}/bin/kubectl version --client
+                        echo "kubectl path: $(which kubectl)"
                     '''
                 }
             }
