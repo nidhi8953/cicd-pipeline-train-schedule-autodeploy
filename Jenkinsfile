@@ -64,6 +64,14 @@ pipeline {
                 }
             }
         }
+        stage('Deploy') {
+            steps {
+                withKubeConfig([credentialsId: 'kubeconfig_id', 
+                              serverUrl: 'https://127.0.0.1:32779']) {
+                    sh 'kubectl apply -f train-schedule-kube-canary.yaml'
+                }
+            }
+        }
         stage('CanaryDeploy') {
 
             environment { 
