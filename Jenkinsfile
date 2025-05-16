@@ -94,12 +94,17 @@ pipeline {
             steps {                         
                 // OR Method 2: Using text credentials if you have the kubeconfig content
                 withCredentials([string(credentialsId: 'kubeconfig_id', variable: 'KUBECONFIG_CONTENT')]) {
-                    sh '''
-                        echo "$KUBECONFIG_CONTENT" > kubeconfig.yaml
-                        export KUBECONFIG=kubeconfig.yaml
-                        kubectl apply -f train-schedule-kube-canary.yaml
-                        rm kubeconfig.yaml
-                    '''
+                    script {
+                        // Create properly formatted kubeconfig file
+                        writeFile file: 'kubeconfig', text: KUBECONFIG_CONTENT
+                        
+                        // Deploy with explicit kubeconfig path
+                        sh '''
+                            chmod 600 kubeconfig
+                            kubectl apply -f train-schedule-kube-canary.yaml --kubeconfig=kubeconfig
+                            rm -f kubeconfig  # Clean up sensitive file
+                        '''
+                    }
                 }
             }
         }
