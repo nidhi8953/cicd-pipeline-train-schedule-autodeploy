@@ -76,7 +76,7 @@ pipeline {
         stage('Deploy') {
             steps {                         
                 // OR Method 2: Using text credentials if you have the kubeconfig content
-                withCredentials([string(credentialsId: 'kubeconfig_id', variable: 'KUBECONFIG_CONTENT']) {
+                withCredentials([string(credentialsId: 'kubeconfig_id', variable: 'KUBECONFIG_CONTENT')]) {
                     sh '''
                         echo "$KUBECONFIG_CONTENT" > kubeconfig.yaml
                         export KUBECONFIG=kubeconfig.yaml
