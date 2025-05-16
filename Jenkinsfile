@@ -5,6 +5,11 @@ pipeline {
         DOCKER_IMAGE_NAME = "nidhisarup8953/train-schedule"
     }
     stages {
+         stage('Checkout') {
+            steps {
+                checkout scm  // This is crucial for branch detection
+            }
+        }
         stage('Build') {
             steps {
 
