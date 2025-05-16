@@ -7,6 +7,10 @@ pipeline {
     stages {
         stage('Build') {
             steps {
+
+                sh 'rm -rf build/nodejs/'
+                sh 'rm -rf build/npm/'
+                sh 'rm -rf node_modules/'
                 echo 'Running build automation'
                 echo "Displayed*******************************************"
                 sh 'chmod +x gradlew'
