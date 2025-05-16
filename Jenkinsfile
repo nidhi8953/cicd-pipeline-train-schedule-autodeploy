@@ -8,6 +8,15 @@ pipeline {
          stage('Checkout') {
             steps {
                 checkout scm  // This is crucial for branch detection
+                script {
+                    // This will get the actual branch name
+                    def BRANCH = sh(returnStdout: true, script: 'git rev-parse --abbrev-ref HEAD').trim()
+                    echo "Current branch: ${BRANCH}"
+                    
+                    // Alternatively, if you want the remote tracking branch
+                    def REMOTE_BRANCH = sh(returnStdout: true, script: 'git branch -r --contains HEAD | sed "s/origin\\///" | head -1').trim()
+                    echo "Remote branch: ${REMOTE_BRANCH}"
+                }
             }
         }
         stage('Build') {
