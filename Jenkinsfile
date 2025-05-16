@@ -21,6 +21,13 @@ pipeline {
                 archiveArtifacts artifacts: 'dist/trainSchedule.zip'
             }
         }
+        stage('Debug Branch') {
+            steps {
+                script {
+                    echo "Current branch: ${env.BRANCH_NAME}"
+                }
+            }
+        }
         stage('Build Docker Image') {
             when {
                 branch 'master'
