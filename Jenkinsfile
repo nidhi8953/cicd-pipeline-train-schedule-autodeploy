@@ -74,12 +74,13 @@ pipeline {
             }
         }
         stage('Deploy') {
-            steps {               
+            steps {                         
+                // OR Method 2: Using text credentials if you have the kubeconfig content
                 withCredentials([string(credentialsId: 'kubeconfig_id', variable: 'KUBECONFIG_CONTENT']) {
                     sh '''
                         echo "$KUBECONFIG_CONTENT" > kubeconfig.yaml
                         export KUBECONFIG=kubeconfig.yaml
-                        kubectl apply -f deployment.yaml
+                        kubectl apply -f train-schedule-kube-canary.yaml
                         rm kubeconfig.yaml
                     '''
                 }
