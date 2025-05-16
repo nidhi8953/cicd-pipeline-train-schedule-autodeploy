@@ -74,10 +74,14 @@ pipeline {
             }
         }
         stage('Deploy') {
-            steps {
-                withKubeConfig([credentialsId: 'kubeconfig_id', 
-                              serverUrl: 'https://127.0.0.1:32779']) {
-                    sh 'kubectl apply -f train-schedule-kube-canary.yaml'
+            steps {               
+                 withCredentials([string(credentialsId: 'kubeconfig_id', variable: 'KUBECONFIG_CONTENT']) {
+                    sh '''
+                        echo "$KUBECONFIG_CONTENT" > kubeconfig.yaml
+                        export KUBECONFIG=kubeconfig.yaml
+                        kubectl apply -f train-schedule-kube-canary.yaml
+                        rm kubeconfig.yaml
+                    '''
                 }
             }
         }
