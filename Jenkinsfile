@@ -68,28 +68,15 @@ pipeline {
                 }
             }
         }
-        stage('Setup kubectl') {
-            steps {
-                script {
-                    // Create bin directory if it doesn't exist
-                    sh 'mkdir -p ${HOME}/bin'
-                    
-                    // Download and install kubectl
-                    sh '''
-                        curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
-                        chmod +x kubectl
-                        mv kubectl ${HOME}/bin/
-                    '''
-                    
-                    // Verify installation
-                    sh '''
-                        ${HOME}/bin/kubectl version --client
-                        echo "kubectl path: $(which kubectl)"
-                    '''
-                }
-            }
-            
-        }
+ 	    stage('Install Kubectl'){
+			steps {
+				sh '''
+				curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
+                		chmod +x kubectl
+                		mv kubectl /usr/local/bin/kubectl
+				'''
+			}
+		}
     
     }
 }
