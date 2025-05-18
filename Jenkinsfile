@@ -32,6 +32,20 @@ pipeline {
                 }
             }
         }
+        stage('Deploy to Kubernetes') {
+            steps {
+                // Method 1: Using withKubeConfig (recommended)
+                withKubeConfig([
+                    credentialsId: 'kubeconfig',
+                    serverUrl: 'https://192.168.49.2:8443'
+                ]) {
+                    sh 'kubectl apply -f train-schedule-kube-canary.yml'
+                }
+
+                // Method 2: Using raw kubectl (if configured on agent)
+                // sh 'kubectl apply -f deployment.yaml'
+            }
+        }
         stage('CanaryDeploy') {
             environment { 
                 CANARY_REPLICAS = 1
