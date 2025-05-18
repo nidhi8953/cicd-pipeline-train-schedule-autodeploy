@@ -37,10 +37,9 @@ pipeline {
                 CANARY_REPLICAS = 1
             }
             steps {
-                kubernetesDeploy(
+                kubernetesCli(
                     kubeconfigId: 'kubeconfig',
-                    configs: 'train-schedule-kube-canary.yml',
-                    enableConfigSubstitution: true
+                    command: 'apply -f train-schedule-kube-canary.yml'
                 )
             }
         }
